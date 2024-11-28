@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            
+            text-align: center;
+            color: white;
+            background: linear-gradient(to right,#555,#333);
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: inline-block;
+            width: auto;
+            padding: 35px;
+            background: linear-gradient(to right, rgb(27, 22, 22), rgb(48, 43, 43));
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: 100px 100px 100px;
+            grid-template-rows:100px 100px 100px;
+            grid-gap: 5px;
+            border: 2px solid black;
+            
+
+        }
+
+        .cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #888;
+            padding: 20px;
+            cursor: pointer;
+            font-size: 36px;
+            color: white;
+            border: 2px solid #333;
+        }
+
+        .cell:hover {
+            background-color: #555;
+        } 
+        label{
+            display: flex;
+            padding: 25px;
+        }
+       
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tic Tac Toe</h1>
+        <div class="game-board">
+            <span class="cell"></span>
+            <span class="cell"></span>
+            <span class="cell"></span>
+            <span class="cell"></span>
+            <span class="cell"></span>
+            <span class="cell"></span>
+            <span class="cell"></span>
+            <span class="cell"></span>
+            <span class="cell"></span>
+        </div>
+    </div>
+    <label for="x">X wins:<input type="text" name="x"></label>
+    <label for="o">O wins:<input type="text" name="o"></label>
+    <label for="d">Match Draw:<input type="text" name="d"></label>
+
+</body>
+<script>
+   
+   let cells = document.querySelectorAll('.cell');
+let currentPlayer = "X";
+let end = false;
+let winningPatterns = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+start();
+
+function start() {
+    cells.forEach(cell => {
+        cell.addEventListener('click', traverse);
+    });
+}
+
+function traverse(e) { 
+    const cell = e.target;
+    if (!(cell.classList.contains('X') || cell.classList.contains('O'))) {
+        cell.textContent = currentPlayer;
+        cell.classList.add(currentPlayer); 
+        changePlayer(cell);      
+    }
+}
+
+function changePlayer(cell) {
+    if (currentPlayer === 'X') {
+        currentPlayer = 'O';
+    } else {
+        currentPlayer = 'X';
+    }
+
+    if (cell.classList.contains('X')) {
+        cell.style.background = 'red';
+        cell.style.fontSize = '4.6em';
+    } else {
+        cell.style.background = 'blue';
+        cell.style.fontSize = '4.6em';
+    }
+}
+</script>
+</html>
