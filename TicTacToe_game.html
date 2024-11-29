@@ -36,8 +36,6 @@
             grid-template-rows:100px 100px 100px;
             grid-gap: 5px;
             border: 2px solid black;
-            
-
         }
 
         .cell {
@@ -66,15 +64,15 @@
     <div class="container">
         <h1>Tic Tac Toe</h1>
         <div class="game-board">
-            <span class="cell"></span>
-            <span class="cell"></span>
-            <span class="cell"></span>
-            <span class="cell"></span>
-            <span class="cell"></span>
-            <span class="cell"></span>
-            <span class="cell"></span>
-            <span class="cell"></span>
-            <span class="cell"></span>
+            <span class="cell" data-key="0"></span>
+            <span class="cell" data-key="1"></span>
+            <span class="cell" data-key="2"></span>
+            <span class="cell" data-key="3"></span>
+            <span class="cell" data-key="4"></span>
+            <span class="cell" data-key="5"></span>
+            <span class="cell" data-key="6"></span>
+            <span class="cell" data-key="7"></span>
+            <span class="cell" data-key="8"></span>
         </div>
     </div>
     <label for="x">X wins:<input type="text" name="x"></label>
@@ -83,9 +81,10 @@
 
 </body>
 <script>
-   
+       
    let cells = document.querySelectorAll('.cell');
 let currentPlayer = "X";
+let winningPatterns = [['0','1','2'],['3','4','5'],['6','7','8'],['0','3','6'],['1','4','7'],['2','5','8'],['0','4','8'],['2','4','6']];
 start();
 
 function start() {
@@ -96,14 +95,19 @@ function start() {
 
 function traverse(e) { 
     const cell = e.target;
+    
     if (!(cell.classList.contains('X') || cell.classList.contains('O'))) {
         cell.textContent = currentPlayer;
-        cell.classList.add(currentPlayer); 
-        changePlayer(cell);      
-    }
+        cell.classList.add(currentPlayer);
+        changePlayer(cell);
+        checkWinner();      
+    }   
 }
 
 function changePlayer(cell) {
+    if(cell.classList.contains(currentPlayer)) {
+        console.log(currentPlayer + cell.dataset.key);
+    }
     if (currentPlayer === 'X') {
         currentPlayer = 'O';
     } else {
@@ -117,6 +121,26 @@ function changePlayer(cell) {
         cell.style.background = 'blue';
         cell.style.fontSize = '4.6em';
     }
+    
+}
+
+function checkWinner() {
+    let datakey = []; 
+
+    for (let i = 0; i < cells.length; i++) {
+        if (cells[i].classList.contains(currentPlayer)) {
+            console.log(currentPlayer + cells[i].dataset.key);
+            datakey.push(cells[i].dataset.key); 
+        }
+    }
+    console.log(datakey); 
+    for(let i = 0;i < winningPatterns.length;i++) {
+        let pattern = winningPatterns[i];
+        if(pattern === datakey) {
+            console.log(`${currentPlayer} wins`);
+        }
+    }
+    
 }
 </script>
 </html>
