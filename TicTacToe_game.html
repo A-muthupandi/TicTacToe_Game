@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,58 +7,87 @@
     <title>Document</title>
     <style>
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        body {
-            
-            text-align: center;
-            color: white;
-            background: linear-gradient(to right,#555,#333);
-            font-family: Arial, sans-serif;
-        }
+body {
+    
+    text-align: center;
+    color: white;
+    background: linear-gradient(to right, #555, #333);
+    font-family: Arial, sans-serif;
+}
 
-        .container {
-            display: inline-block;
-            width: auto;
-            padding: 35px;
-            background: linear-gradient(to right, rgb(27, 22, 22), rgb(48, 43, 43));
-        }
+.container {
+    display: inline-block;
+    width: auto;
+    padding: 35px;
+    background: linear-gradient(to right, rgb(27, 22, 22), rgb(48, 43, 43));
+}
 
-        h1 {
-            margin-bottom: 20px;
-        }
+h1 {
+    margin-bottom: 20px;
+}
 
-        .game-board {
-            display: grid;
-            grid-template-columns: 100px 100px 100px;
-            grid-template-rows:100px 100px 100px;
-            grid-gap: 5px;
-            border: 2px solid black;
-        }
+.game-board {
+    display: grid;
+    grid-template-columns: 100px 100px 100px;
+    grid-template-rows: 100px 100px 100px;
+    grid-gap: 5px;
+    border: 2px solid black;
+}
 
-        .cell {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #888;
-            padding: 20px;
-            cursor: pointer;
-            font-size: 36px;
-            color: white;
-            border: 2px solid #333;
-        }
+.cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #888;
+    padding: 20px;
+    cursor: pointer;
+    font-size: 36px;
+    color: white;
+    border: 2px solid #333;
+}
 
-        .cell:hover {
-            background-color: #555;
-        } 
-        label{
-            display: flex;
-            padding: 25px;
-        }
-       
+.cell:hover {
+    background-color: #555;
+}
+
+label {
+    display: inline;
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+    padding: 25px;
+}
+
+input {
+    text-align: center;
+    margin-left: 10px;
+    border: none;
+    border-radius: 50% 50%;
+    width: 30px;
+}
+
+#output { 
+    visibility: hidden;
+    margin-left: 38vw;
+    font-size: 5em;
+    color: white;
+    background-color: green;
+    padding: 0px;
+    margin-top: 20px;
+    margin-bottom: 70px;
+    width: 350px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
     </style>
 </head>
 <body>
@@ -75,17 +105,25 @@
             <span class="cell" data-key="8"></span>
         </div>
     </div>
-    <label for="x">X wins:<input type="text" name="x"></label>
-    <label for="o">O wins:<input type="text" name="o"></label>
-    <label for="d">Match Draw:<input type="text" name="d"></label>
+    <div id="output"></div>
+    <label for="x">X wins:<input type="text" name="x" readonly></label>
+    <label for="o">O wins:<input type="text" name="o" readonly></label>
 
+    <label for="d">Match Draw:<input type="text" name="d" readonly></label>
 </body>
 <script>
-       
-   let cells = document.querySelectorAll('.cell');
+let cells = document.querySelectorAll('.cell');
 let currentPlayer = "X";
 let winningPatterns = [['0','1','2'],['3','4','5'],['6','7','8'],['0','3','6'],['1','4','7'],['2','5','8'],['0','4','8'],['2','4','6']];
 start();
+let winsX = document.querySelector('input[name = x]');
+let winsO = document.querySelector('input[name = o]');
+let mDraw = document.querySelector('input[name = d]');
+let output = document.getElementById('output');
+let end = false;
+let scoreX = 0;
+let scoreO = 0;
+let dScore = 0;
 
 function start() {
     cells.forEach(cell => {
@@ -95,52 +133,92 @@ function start() {
 
 function traverse(e) { 
     const cell = e.target;
-    
     if (!(cell.classList.contains('X') || cell.classList.contains('O'))) {
         cell.textContent = currentPlayer;
         cell.classList.add(currentPlayer);
+        checkWinner(); 
         changePlayer(cell);
-        checkWinner();      
     }   
 }
 
 function changePlayer(cell) {
-    if(cell.classList.contains(currentPlayer)) {
-        console.log(currentPlayer + cell.dataset.key);
-    }
     if (currentPlayer === 'X') {
         currentPlayer = 'O';
-    } else {
+    } else{
         currentPlayer = 'X';
     }
 
     if (cell.classList.contains('X')) {
         cell.style.background = 'red';
         cell.style.fontSize = '4.6em';
-    } else {
+    } 
+    if (cell.classList.contains('O')) {
         cell.style.background = 'blue';
         cell.style.fontSize = '4.6em';
     }
-    
 }
 
 function checkWinner() {
-    let datakey = []; 
-
+    let datakey = [];
     for (let i = 0; i < cells.length; i++) {
-        if (cells[i].classList.contains(currentPlayer)) {
-            console.log(currentPlayer + cells[i].dataset.key);
+        if (cells[i].classList.contains(currentPlayer)) {    
             datakey.push(cells[i].dataset.key); 
         }
     }
-    console.log(datakey); 
-    for(let i = 0;i < winningPatterns.length;i++) {
+    for (let i = 0; i < winningPatterns.length; i++) {
         let pattern = winningPatterns[i];
-        if(pattern === datakey) {
-            console.log(`${currentPlayer} wins`);
+        let [p1, p2, p3] = pattern;  
+        
+        if (datakey.includes(p1) && datakey.includes(p2) && datakey.includes(p3)) {
+            output.textContent = `${currentPlayer} wins`;
+            output.style.visibility = 'visible';
+            end = true;
+            if (end) {
+                endGame(currentPlayer);
+            }
+            return ;
         }
     }
-    
+    matchDraw();
 }
+
+function matchDraw() {
+    let fill = 0;
+    for (let i = 0; i < cells.length; i++) {
+        if (cells[i].classList.contains('X') || cells[i].classList.contains('O')) {
+            fill++;
+        }
+    }
+    if (fill === cells.length) {
+        end = true;
+        alert('Match Draw!');
+        mDraw.value = ++dScore;
+        output.textContent = `It's Draw!`;
+        output.style.visibility = 'visible';
+        restart();
+    }
+}
+
+function endGame(currentPlayer) {
+    if(currentPlayer === 'O') {
+        winsO.value = ++scoreO;
+        restart();
+    }
+    if(currentPlayer === 'X') {
+        winsX.value = ++scoreX;
+        restart();
+    }
+}
+
+function restart() {
+    cells.forEach(cell => {
+        cell.textContent = '';
+        cell.classList.remove('X', 'O');
+        cell.style.background = '#888';
+    });
+    currentPlayer = 'O';
+    start();
+}
+
 </script>
 </html>
