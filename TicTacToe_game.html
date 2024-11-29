@@ -167,7 +167,9 @@ function checkWinner() {
     }
     for (let i = 0; i < winningPatterns.length; i++) {
         let pattern = winningPatterns[i];
-        let [p1, p2, p3] = pattern;  
+        let p1 = pattern[0]; 
+        let p2 = pattern[1];
+        let p3 = pattern[2];
         
         if (datakey.includes(p1) && datakey.includes(p2) && datakey.includes(p3)) {
             output.textContent = `${currentPlayer} wins`;
